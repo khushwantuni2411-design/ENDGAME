@@ -1,35 +1,38 @@
+let memory = [];
+
 function send() {
   const input = document.getElementById("input");
   const chat = document.getElementById("chat");
 
-  let msg = input.value;
+  let msg = input.value.trim();
   if (!msg) return;
 
   chat.innerHTML += `<div class="user">You: ${msg}</div>`;
   input.value = "";
 
-  let text = msg.toLowerCase();
-  let reply = "";
+  memory.push({ role: "user", content: msg });
 
-  if (text.includes("hi") || text.includes("hello")) {
-    reply = "Hello 👋 How can I help you?";
-  } 
-  else if (text.includes("how are you")) {
-    reply = "I'm doing great! Ready to help you 🚀";
-  } 
-  else if (text.includes("who are you")) {
-    reply = "I am ENDGAME — an AI assistant built for knowledge and problem solving.";
-  } 
-  else if (text.includes("help")) {
-    reply = "Sure! Tell me what you need help with 🙂";
-  } 
-  else if (text.includes("bye")) {
-    reply = "Goodbye 👋 See you soon!";
-  } 
-  else {
-    reply = "Interesting question 🤔 Tell me more.";
-  }
-
-  chat.innerHTML += `<div class="bot">ENDGAME: ${reply}</div>`;
+  // thinking message
+  const thinkingDiv = document.createElement("div");
+  thinkingDiv.className = "bot";
+  thinkingDiv.innerText = "ENDGAME is thinking...";
+  chat.appendChild(thinkingDiv);
   chat.scrollTop = chat.scrollHeight;
+
+  setTimeout(() => {
+    chat.removeChild(thinkingDiv);
+
+    let reply = getReply(msg);
+    memory.push({ role: "bot", content: reply });
+
+    typeEffect(chat, "ENDGAME", reply);
+  }, 800);
 }
+
+function getReply(msg) {
+  let text = msg.toLowerCase();
+
+  if (text.includes("hi") || text.includes("hello"))
+    return "Hello 👋 I am ENDGAME. How can I assist you today?";
+
+  i
